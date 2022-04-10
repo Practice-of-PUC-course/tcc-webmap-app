@@ -1,0 +1,63 @@
+/** general definitions */
+div.row{
+    background-color: #fafbfc;
+}
+
+/** map */
+#mainmap {
+    background-color: #fafbfc;
+    width: 100%;
+    padding: 6px;
+}
+.mm-col{
+    padding-right: 0;
+    padding-left: 0;;
+}
+
+.info { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; }
+/**
+used by legend inside mapa (disabled)
+.legend { text-align: left; line-height: 18px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }
+*/
+/** Menu bar */
+.menu-bar{
+    display: inline-flex;
+    background-color: #24292e;
+    height: 55px;
+    color: white;
+    padding: calc(0.6%);
+}
+.mb-row{
+    padding: 0px !important;
+}
+.btn-group{
+    margin-left: auto;
+}
+.dropdown-menu.show{
+    z-index: 99999;
+    cursor: pointer;
+}
+.main-txt-menu-bar{
+    margin-top: auto;
+}
+/** Detail bar */
+.footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: #24292e !important;
+    color: #fafbfc;
+    width: 100%;
+    text-align: center;
+    font-size: x-small;
+}
+
+/** modal window */
+iframe{
+    width: 100%;
+    border: none;
+}
+.modal-dialog{
+    max-width: calc(85%);
+    max-height: calc(95%);
+}

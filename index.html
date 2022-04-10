@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="css/libs/bootstrap-4.3.1/bootstrap.min.css" rel="stylesheet"/>
+<link href="css/libs/leaflet.min.css" rel="stylesheet"/>
+<link href="css/main.css" rel="stylesheet"/>
+
+<title>Webmap - POC</title>
+<link rel="shortcut icon" type="image/icon" href="img/favicon.ico"/>
+</head>
+<body>
+    <div class="container-fluid">
+        <div id="errors" style="display: none;" class="row">
+            <div class="col-12">
+                <div id="msg-errors" class="alert alert-danger" role="alert">
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-row">
+            <div class="col-12 menu-bar">
+                <h4 id="main-txt-menu-bar"></h4>
+                <div class="btn-group">
+                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dados disponíveis
+                    </button>
+                    <div id="datasourse-selector" class="dropdown-menu"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row main-row">
+            <div class="col-12 mm-col">
+                <div id="mainmap"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div style="line-height: 15px;">
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licença Creative Commons" style="border-width:0;vertical-align: top;" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
+            </div>
+            Esta obra está licenciada com uma Licença <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Atribuição-CompartilhaIgual 4.0 Internacional</a>.
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+               
+                <div class="modal fade" id="display-pdf" role="dialog" aria-labelledby="pdfviewer" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="pdfviewer">
+                                    Modal title
+                                </h5> 
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe id="pdffile" src=""></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Fechar
+                                </button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/libs/jquery-3.6.0.min.js"></script>
+    <script src="js/libs/popper/1.11.0/popper.min.js"></script>
+    <script src="js/libs/bootstrap-4.3.1/bootstrap.min.js"></script>
+    <script src="js/libs/leaflet-1.7.1-min.js"></script>    
+    <script src="js/libs/rxjs/rxjs.umd.min.js"></script>
+
+    <script src="js/main.js"></script>
+    <script src="js/config-ui.js"></script>
+    <script src="js/datasource-conf.js"></script>
+    <script src="js/map.js"></script>
+    
+</body>
+</html>
