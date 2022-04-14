@@ -6,21 +6,13 @@ var mainMap={
     mainLayer: null,// reference to main leaflet layer based on geojson raw data.
     defaultZoomLevel:5,// the zoom level used to reset view map
     info:L.control(),
-    observer:null,
+    ctrlLayer:null,
+    baseLayers:{},
+    overLayers:{},
     selectedFeature:null,
 
     init:(dataSource)=>{
-        return new rxjs.Observable(
-            (observer)=>{
-                mainMap.observer=observer;
-                mainMap.createMap(dataSource);
-                //mainMap.fetchData(dataSource);
-            },
-            ()=>{
-                // on error, set .... as default
-                console.log("Missing error handler");
-            }
-        );
+        mainMap.createMap(dataSource);
     },
 
     createMap:(dataSource)=>{
@@ -28,16 +20,21 @@ var mainMap={
             mainMap.map.off();
             mainMap.map.remove();
         }
-        mainMap.map = L.map('mainmap').setView([-14, -48], mainMap.defaultZoomLevel);
+        let bbox=conf.gs_bbox;
+        bbox=L.latLngBounds(bbox.northEast,bbox.southWest);
+        mainMap.map = L.map('mainmap').setView(bbox.getCenter(), mainMap.defaultZoomLevel);
+        mainMap.map.fitBounds(bbox);
+
         mainMap.addBaseLayer(dataSource);
         mainMap.addWMSLayers(dataSource);
-        mainMap.addInfoControl();
+        mainMap.addControlLayers();
+        //mainMap.addInfoControl();
         mainMap.addAttribution();
     },
 
     // create and add the OSM layer as base layer (background)
     addBaseLayer:(conf)=>{
-        L.tileLayer(conf.osm_url+'/{id}/tiles/{z}/{x}/{y}?access_token='+conf.osm_token, {
+        mainMap.baseLayers["OpenStreetMap"]=L.tileLayer(conf.osm_url+'/{id}/tiles/{z}/{x}/{y}?access_token='+conf.osm_token, {
             maxZoom: 18,
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
                 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -47,7 +44,13 @@ var mainMap={
         }).addTo(mainMap.map);
     },
 
-    // create and add the overlay layers as WMS layer
+    addControlLayers:()=>{
+        let baseLayers=mainMap.baseLayers;
+        let overlays=mainMap.overLayers;
+        mainMap.ctrlLayer=L.control.layers(baseLayers, overlays).addTo(mainMap.map);
+    },
+
+    // create the overlay layers as WMS layer
     addWMSLayers:(conf)=>{
         let ZIndex=1,
         layers=conf.gs_layers;
@@ -60,13 +63,55 @@ var mainMap={
                 tiled: true,
                 zIndex: ZIndex,
                 attribution: 'IBGE'
-            }).addTo(mainMap.map);
+            });
+            mainMap.overLayers[layers[i].label]=l;
             ZIndex++;
         }
-        let bbox=conf.gs_bbox;
-        bbox=L.latLngBounds(bbox.northEast,bbox.southWest);
+    },
+
+    removeMarker: ()=>{
+        if(mainMap.marker){
+            mainMap.map.removeLayer(mainMap.marker);
+        }
+    },
+
+    addMarker: (location, values)=>{
+        if(mainMap.marker){
+            mainMap.map.removeLayer(mainMap.marker);
+        }
+        const markerIcon = L.icon({
+            iconSize: [25, 41],
+            iconAnchor: [10, 41],
+            popupAnchor: [2, -40],
+            // specify the path here
+            iconUrl: "imgs/marker-icon.png",
+            shadowUrl: "imgs/marker-shadow.png"
+        });
+
+        let popupInfo="<b>Seu endereço cadastrado em nossa base da dados.</b><br>"
+        +values.street+", "+values.housenumber+"<br>"+values.county+" - "+values.state;
+
+        mainMap.marker=L.marker(
+            [location.lat,location.lng],
+            {
+                draggable: false,
+                title: "Seu endereço cadastrado em nossa base da dados.",
+                opacity: 1,
+                icon: markerIcon
+            }
+        )
+        .addTo(mainMap.map)
+        .bindPopup(popupInfo)
+        .openPopup();
+        mainMap.marker.on('dragend', (ev)=>{
+            controlForm.enableSaveBtn();
+        });
+        var ll = [ mainMap.marker.getLatLng() ];
+        var bbox = L.latLngBounds(ll);
         mainMap.map.fitBounds(bbox);
     },
+
+    /** TODO: i need the methods below? */
 
     // control that shows state info on hover
     addInfoControl:()=>{
@@ -78,9 +123,9 @@ var mainMap={
 
         mainMap.info.update = function (props) {
             this._div.innerHTML = (props ?
-                '<b>' + props.nm + '</b><br />Valor do índice: ' + ((props.indicator>=0)?(props.indicator.toFixed(2)):("inexistente")) + ' (entre 0 e 1)'
-                : 'Selecione um município');
-            if(props) detail.setSelectedGeom(props).updatePanel();
+                '<b>' + props + '</b>'
+                : 'Selecione um usuário');
+            //if(props) detail.setSelectedGeom(props).updatePanel();
         };
 
         mainMap.info.addTo(mainMap.map);
@@ -161,27 +206,28 @@ var mainMap={
         });
     },
 
-    fetchData(dataSource){
-        fetch(dataSource.url)
-        .then(
-            (response)=>{
-                // on sucess
-                response.json()
-                .then(
-                    (data)=>{
-                        mainMap.geojson = data;
-                        // mainMap.createMainLayer(data);
-                        // mainMap.updateLayer(data);
-                        // on sucess
-                        if(mainMap.observer) mainMap.observer.next();
-                    }
-                );
-            },
-            ()=>{
-                // on reject
-                console.log("Falhou ao ler o geojson. Mapa incompleto.");
-            },
-        );
+    createGeoJson(){
+        // https://geojson.org/
+        // let geojson={
+        //     'type': 'FeatureCollection',
+        //     'crs': {
+        //       'type': 'name',
+        //       'properties': {
+        //         'name': 'EPSG:4326',
+        //       },
+        //     },
+        //     'features': [
+        //         {
+        //             "type": "Feature",
+        //             "geometry": {
+        //                 "type": "Point",
+        //                 "coordinates": [location.lng, location.lat]
+        //             },
+        //             "properties": values
+        //         }
+        //     ]
+        // };
+        //mainMap.createMainLayer(geojson);
     },
 
     createMainLayer: (data)=>{

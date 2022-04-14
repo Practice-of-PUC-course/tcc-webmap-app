@@ -32,6 +32,14 @@ used by legend inside mapa (disabled)
 }
 .btn-group{
     margin-left: auto;
+    height: fit-content;
+    right: 5px;
+}
+.username{
+    width: 280px;
+    height: 32px;
+    display: inline-block;
+    padding-top: 0px;
 }
 .dropdown-menu.show{
     z-index: 99999;
@@ -60,4 +68,24 @@ iframe{
 .modal-dialog{
     max-width: calc(85%);
     max-height: calc(95%);
+}
+
+/** custom image path */
+.leaflet-control-layers-toggle{background-image:url(/imgs/layers.png);}
+
+/** general alert info */
+#general-notes{
+    font-size: 0.9rem;
+    width: 100%;
+    text-align: center;
+}
+#general-info{
+    display: none;
+    width: 40%;
+    position: absolute;
+    left: calc(25%);
+    top: 65px;
+    height: 35px;
+    align-items: center;
+    z-index: 999999999;
 }

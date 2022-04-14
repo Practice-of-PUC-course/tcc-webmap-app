@@ -7,7 +7,7 @@
 <link href="css/main.css" rel="stylesheet"/>
 
 <title>Webmap - POC</title>
-<link rel="shortcut icon" type="image/icon" href="img/favicon.ico"/>
+<link rel="shortcut icon" type="image/icon" href="imgs/favicon.ico"/>
 </head>
 <body>
     <div class="container-fluid">
@@ -22,10 +22,13 @@
             <div class="col-12 menu-bar">
                 <h4 id="main-txt-menu-bar"></h4>
                 <div class="btn-group">
-                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dados disponíveis
-                    </button>
-                    <div id="datasourse-selector" class="dropdown-menu"></div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            usuários (selecione)
+                        </button>
+                        <div id="useritens" class="dropdown-menu"></div>
+                    </div>
+                    <input type="string" class="form-control username" disabled="disabled">
                 </div>
             </div>
         </div>
@@ -75,16 +78,21 @@
 
     </div>
 
+    <div id="general-info" class="alert alert-dismissable alert-warning">
+        <span id="general-notes"></span>
+    </div>
+
     <script src="js/libs/jquery-3.6.0.min.js"></script>
     <script src="js/libs/popper/1.11.0/popper.min.js"></script>
     <script src="js/libs/bootstrap-4.3.1/bootstrap.min.js"></script>
     <script src="js/libs/leaflet-1.7.1-min.js"></script>    
     <script src="js/libs/rxjs/rxjs.umd.min.js"></script>
-
+    <script src="js/conf.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/config-ui.js"></script>
-    <script src="js/datasource-conf.js"></script>
+    <script src="js/ui-conf.js"></script>
     <script src="js/map.js"></script>
+    <script src="js/api-client.js"></script>
+    <script src="js/control-form.js"></script>
     
 </body>
 </html>
