@@ -7,18 +7,12 @@ div.row{
 #mainmap {
     background-color: #fafbfc;
     width: 100%;
-    padding: 6px;
 }
 .mm-col{
     padding-right: 0;
     padding-left: 0;;
 }
 
-.info { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; }
-/**
-used by legend inside mapa (disabled)
-.legend { text-align: left; line-height: 18px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }
-*/
 /** Menu bar */
 .menu-bar{
     display: inline-flex;
@@ -34,12 +28,19 @@ used by legend inside mapa (disabled)
     margin-left: auto;
     height: fit-content;
     right: 5px;
+    border-radius: 4px !important;
 }
-.username{
-    width: 280px;
-    height: 32px;
-    display: inline-block;
-    padding-top: 0px;
+.btn-group>.btn:not(:last-child):not(.dropdown-toggle) {
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+}
+.btn-group>.btn:not(:first-child) {
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+}
+.btn-group>.btn-group:not(:last-child)>.btn, .btn-group>.btn:not(:last-child):not(.dropdown-toggle) {
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
 }
 .dropdown-menu.show{
     z-index: 99999;
@@ -60,13 +61,25 @@ used by legend inside mapa (disabled)
     font-size: x-small;
 }
 
-/** modal window */
-iframe{
-    width: 100%;
-    border: none;
+/** filter - modal window */
+.username, .usertypename, .countyname, .proximity{
+    width: 250px;
+    height: 32px;
+    display: inline-block;
+    padding-top: 0px;
+}
+.lbl-proximity{
+    margin-right: 4px;
+}
+.ftext{
+    display: inline-flex;
+    align-items: center;
+}
+#btn-filters{
+    display: none;
 }
 .modal-dialog{
-    max-width: calc(85%);
+    max-width: calc(65%);
     max-height: calc(95%);
 }
 

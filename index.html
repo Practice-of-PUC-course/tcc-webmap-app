@@ -29,6 +29,16 @@
                         <div id="useritens" class="dropdown-menu"></div>
                     </div>
                     <input type="string" class="form-control username" disabled="disabled">
+                    &nbsp;&nbsp;
+                    <div id="btn-filters">
+                        <span class="ftext">filtros:</span>
+                        <button type="button" onclick="controlForm.openSimpleFilter()" class="btn-mb btn btn-primary btn-sm">
+                            simples
+                        </button>
+                        <button type="button" onclick="controlForm.openAdvancedFilter()" class="btn-mb btn btn-primary btn-sm">
+                            avançado
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -48,30 +58,99 @@
         <div class="row">
             <div class="col-md-12">
                
-                <div class="modal fade" id="display-pdf" role="dialog" aria-labelledby="pdfviewer" aria-hidden="true">
+                <!-- start simple modal -->
+                <div class="modal fade" id="simple-filter" role="dialog" aria-labelledby="simplef" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="pdfviewer">
-                                    Modal title
+                                <h5 class="modal-title" id="simplef">
+                                    Filtro por Município
                                 </h5> 
                                 <button type="button" class="close" data-dismiss="modal">
                                     <span aria-hidden="true">×</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <iframe id="pdffile" src=""></iframe>
+                                <div class="row"><!-- start simple filter body -->
+                                    <div class="col-md-12">
+                                        <div class="alert alert-dismissable alert-info">
+                                            <h6>
+                                                Permite encontrar rede conveniada no mesmo município de seu endereço.
+                                            </h6>
+                                        </div>
+            
+                                        <div class="form-block">
+                                            <div class="form-group">
+                                                <input type="string" id="countyname" class="form-control countyname" disabled="disabled">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- end simple filter body -->
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                    Fechar
+                                <button type="button" class="btn btn-success" onclick="controlForm.applySimple();" data-dismiss="modal">
+                                    aplicar
                                 </button>
                             </div>
                         </div>
                         
                     </div>
-                    
-                </div>
+                </div><!-- end simple modal -->
+
+                <!-- start advanced modal -->
+                <div class="modal fade" id="advanced-filter" role="dialog" aria-labelledby="advancedf" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="advancedf">
+                                    Filtro por tipo e proximidade
+                                </h5> 
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="alert alert-dismissable alert-info">
+                                            <h6>
+                                                Permite encontrar rede conveniada por tipo e proximidade ao seu endereço.
+                                            </h6>
+                                        </div>
+            
+                                        <div class="form-block">
+                                            <div class="form-group">
+                                                
+                                                <div class="btn-group">
+                                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        tipo (selecione)
+                                                    </button>
+                                                    <div id="usertypeitens" class="dropdown-menu"></div>
+                                                </div>
+                                                <input type="string" class="form-control usertypename" disabled="disabled">
+                                                <br /><br />
+            
+                                                <label for="proximity_km" class="lbl-proximity">
+                                                    proximidade (km)
+                                                </label>
+                                                <input type="number" class="form-control proximity" id="proximity_km">
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" onclick="controlForm.applyAdvanced();" data-dismiss="modal">
+                                    aplicar
+                                </button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div><!-- end advanced modal -->
                 
             </div>
         </div>

@@ -4,8 +4,10 @@
  */
  var controlForm={
     userdata:{
-        users:[],
-        user:{},
+        users:[],//list of users
+        user:{},//selected user
+        usertypes:[],// list of user types
+        usertype:{},//selected type for filter
         address:{}
     },
 
@@ -17,6 +19,7 @@
     initDisplays:function(){
         // only display users of 'associado' type
         usertype.getTypes((types)=>{
+            controlForm.userdata.usertypes=types;
             let typeId=null;
             for(let i in types) {
                 if(types[i].name=='associado'){
@@ -42,13 +45,15 @@
     },
 
     setUserId:function(ev){
+        // enable filters
+        $('#btn-filters').attr('style','display:inline;');
         let user={
             id:+ev.currentTarget.id,
             name:ev.currentTarget.text,
             description:ev.currentTarget.title
         };
+        controlForm.userdata.user=user;// set selected user
         $('.username').val(user.name);
-        controlForm.userdata.user=user;
         address.getAddress(user.id, (res)=>{
             if(res && user.id==res.userId){
                 let values={
@@ -68,8 +73,18 @@
         });
     },
 
+    setUserTypeId:function(ev){
+        let usertype={
+            id:+ev.currentTarget.id,
+            name:ev.currentTarget.text,
+            description:ev.currentTarget.title
+        };
+        $('.usertypename').val(usertype.name);
+        controlForm.userdata.usertype=usertype;
+    },
+
     displayUserList:function(users){
-        let dss= $('#useritens');
+        let dss=$('#useritens');
         users.forEach(
             u => {
                 let a=$("<a></a>").text(u.name);
@@ -77,6 +92,21 @@
                 a.on("click",controlForm.setUserId);
                 a.attr("title",u.description);
                 a.attr("id",u.id);
+                dss.append(a);
+            }
+        );
+    },
+
+    displayUserTypeList:function(){
+        let types=controlForm.userdata.usertypes;
+        let dss=$('#usertypeitens');
+        types.forEach(
+            ut => {
+                let a=$("<a></a>").text(ut.name);
+                a.addClass("dropdown-item");
+                a.on("click",controlForm.setUserTypeId);
+                a.attr("title",ut.description);
+                a.attr("id",ut.id);
                 dss.append(a);
             }
         );
@@ -101,6 +131,18 @@
         $('#general-info').attr('style','display:inline-flex;');
         
         $('#general-notes').html(msg);
+    },
+
+    applyAdvanced:function(){
+        console.log("filtro avançado");
+    },
+
+    openSimpleFilter:function(){
+        $('#simple-filter').modal('show');
+    },
+
+    openAdvancedFilter:function(){
+        $('#advanced-filter').modal('show');
+        controlForm.displayUserTypeList();
     }
 };
-
