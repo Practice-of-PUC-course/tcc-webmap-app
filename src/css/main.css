@@ -84,7 +84,7 @@ div.row{
 }
 
 /** custom image path */
-.leaflet-control-layers-toggle{background-image:url(/imgs/layers.png);}
+.leaflet-control-layers-toggle{background-image:url(/map/imgs/layers.png);}
 
 /** general alert info */
 #general-notes{

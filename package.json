@@ -1,0 +1,23 @@
+{
+  "name": "tcc-webmap-app",
+  "version": "1.0.0",
+  "description": "The WebMap application - a front-end software component.",
+  "main": "src/server.js",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Practice-of-PUC-course/tcc-webmap-app.git"
+  },
+  "scripts": {
+    "start": "nodemon ./src/server.js"
+  },
+  "author": "andre-carvalho",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1"
+  }
+}
