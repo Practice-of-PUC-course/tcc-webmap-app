@@ -62,14 +62,9 @@ var usertype={
 };
 
 var geo={
-    path: conf.geocode_api+"/location",
+    path: conf.gs_url+"/wms",
 
-    /** formValues={street:street,housenumber:housenumber,county:county,state:state} */
-    getLocation:function(formValues,fn){
-        let params="?street="+formValues.street+
-        "&number="+formValues.housenumber+
-        "&county="+formValues.county+
-        "&state="+formValues.state;
-        api.call(this.path+"/"+params,fn);
+    getGeoJson:function(params,fn){
+        api.call(this.path+params,fn);
     }
 };

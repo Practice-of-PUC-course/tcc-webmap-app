@@ -133,12 +133,18 @@
         $('#general-notes').html(msg);
     },
 
+    applySimple:function(){
+        console.log("filtro simples");
+        mainMap.applySimpleFilter()
+    },
+
     applyAdvanced:function(){
         console.log("filtro avançado");
     },
 
     openSimpleFilter:function(){
         $('#simple-filter').modal('show');
+        $('#countyname').val(controlForm.userdata.address.county);// set on modal filter
     },
 
     openAdvancedFilter:function(){

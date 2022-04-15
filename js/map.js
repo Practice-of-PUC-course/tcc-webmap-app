@@ -3,14 +3,14 @@
  */
 var mainMap={
     map:null,// reference to leaflet map component
-    mainLayer: null,// reference to main leaflet layer based on geojson raw data.
+    geojsonLayer: null,// reference to leaflet layer based on geojson raw data.
     defaultZoomLevel:5,// the zoom level used to reset view map
     info:L.control(),
     legend: null,
     ctrlLayer:null,
     baseLayers:{},
     overLayers:{},
-    selectedFeature:null,
+    layerFilter:null,
 
     init:(dataSource)=>{
         mainMap.createMap(dataSource);
@@ -29,7 +29,6 @@ var mainMap={
         mainMap.addBaseLayer(dataSource);
         mainMap.addWMSLayers(dataSource);
         mainMap.addControlLayers();
-        //mainMap.addInfoControl();
         mainMap.addAttribution();
         mainMap.addCtrlLegend();
     },
@@ -41,6 +40,9 @@ var mainMap={
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             subdomains: ['a','b','c']
         }).addTo( mainMap.map );
+        mainMap.baseLayers["OpenStreetMap"].on('add', (ll)=>{
+            ll.target.bringToBack();
+        });
 
         mainMap.baseLayers["Mapbox"]=L.tileLayer(conf.mbox_url+'/{id}/tiles/{z}/{x}/{y}?access_token='+conf.mbox_token, {
             maxZoom: 18,
@@ -50,11 +52,15 @@ var mainMap={
             tileSize: 512,
             zoomOffset: -1
         });
+
+        mainMap.baseLayers["Mapbox"].on('add', (ll)=>{
+            ll.target.bringToBack();
+        });
     },
 
     getWMSLegend:(layer)=>{
         if(!layer) layer="brasil:bufferkm";
-        let lurl=conf.gs_url+"/wms?REQUEST=GetLegendGraphic&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=";
+        let lurl=conf.gs_url+"/wms?REQUEST=GetLegendGraphic&FORMAT=image/png&WIDTH=30&HEIGHT=30&LAYER=";
         lurl=lurl+layer;
         return lurl;
     },
@@ -89,9 +95,69 @@ var mainMap={
         mainMap.ctrlLayer=L.control.layers(baseLayers, overlays).addTo(mainMap.map);
     },
 
+    applySimpleFilter:()=>{
+        let userId=controlForm.userdata.user.id;
+        let qs="?service=WFS&version=1.0.0&request=GetFeature&typeName=brasil:getmunbyuserid"+
+        "&maxFeatures=1&viewparams=userId:"+userId+"&outputFormat=application%2Fjson";
+
+        geo.getGeoJson(qs,
+            (geojson)=>{
+                mainMap.addGeojsonLayer(geojson);
+                mainMap.addLayerByMun();
+            }
+        );
+    },
+
+    /**
+     * // https://geojson.org/
+     * @param {*} geojson 
+     */
+    addGeojsonLayer:(geojson)=>{
+        let style={
+            fillColor: '#ffffff',
+            fillOpacity: 0,
+            weight: 2,
+            opacity: 0,
+            color: '#0000ff'
+        };
+        if(mainMap.geojsonLayer) mainMap.geojsonLayer.removeFrom(mainMap.map);
+        mainMap.geojsonLayer = L.geoJson(geojson, {
+            style: style
+        }).addTo(mainMap.map);
+
+        var bbox = mainMap.geojsonLayer.getBounds();
+        mainMap.map.fitBounds(bbox);
+    },
+
+    addLayerByMun:()=>{
+        let userId=controlForm.userdata.user.id;
+        let ly=L.tileLayer.wms(conf.gs_url+"/wms", {
+            layers: 'brasil:bymun',
+            viewparams: 'userId:'+userId+';typeId1:2;typeId2:3',
+            format: 'image/png',
+            transparent: true,
+            tiled: true,
+            zIndex: 200,
+            attribution: 'POC/TCC'
+        });
+        ly.on('add',
+            (l)=>{
+                mainMap.legend.update(l.target.wmsParams.layers);
+            }
+        );
+        ly.on('remove',
+            (l)=>{
+                mainMap.legend.update();
+            }
+        );
+        ly.addTo(mainMap.map);
+        ly.bringToFront();
+        mainMap.layerFilter=ly;
+    },
+
     // create the overlay layers as WMS layer
     addWMSLayers:(conf)=>{
-        let ZIndex=1,
+        let ZIndex=100,
         gs_layers=conf.gs_layers;
         for(let i in gs_layers) {
             
