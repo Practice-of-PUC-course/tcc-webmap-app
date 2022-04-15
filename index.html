@@ -11,13 +11,6 @@
 </head>
 <body>
     <div class="container-fluid">
-        <div id="errors" style="display: none;" class="row">
-            <div class="col-12">
-                <div id="msg-errors" class="alert alert-danger" role="alert">
-                </div>
-            </div>
-        </div>
-
         <div class="row mb-row">
             <div class="col-12 menu-bar">
                 <h4 id="main-txt-menu-bar"></h4>
@@ -134,7 +127,7 @@
                                                 <label for="proximity_km" class="lbl-proximity">
                                                     proximidade (km)
                                                 </label>
-                                                <input type="number" class="form-control proximity" id="proximity_km">
+                                                <input type="number" class="form-control proximity" id="proximity_km" required>
                                                 
                                             </div>
                                         </div>
@@ -157,7 +150,7 @@
 
     </div>
 
-    <div id="general-info" class="alert alert-dismissable alert-warning">
+    <div id="general-info" class="alert alert-dismissable alert-danger">
         <span id="general-notes"></span>
     </div>
 

@@ -108,6 +108,20 @@ var mainMap={
         );
     },
 
+    applyAdvancedFilter:(proximity_km)=>{
+        let userId=controlForm.userdata.user.id;
+        let meters=proximity_km*1000;
+        let qs="?service=WFS&version=1.0.0&request=GetFeature&typeName=brasil:getcircbyuserid"+
+        "&maxFeatures=1&viewparams=userId:"+userId+";meters:"+meters+"&outputFormat=application%2Fjson";
+
+        geo.getGeoJson(qs,
+            (geojson)=>{
+                mainMap.addGeojsonLayer(geojson);
+                mainMap.addLayerByProximity(meters);
+            }
+        );
+    },
+
     /**
      * // https://geojson.org/
      * @param {*} geojson 
@@ -131,9 +145,24 @@ var mainMap={
 
     addLayerByMun:()=>{
         let userId=controlForm.userdata.user.id;
+        let vp='userId:'+userId+';typeId1:2;typeId2:3';
+        mainMap.addWMSFilteredLayer('brasil:bymun',vp);
+    },
+
+    addLayerByProximity:(meters)=>{
+        let typeId=controlForm.userdata.usertype.id;
+        let userId=controlForm.userdata.user.id;
+        let vp='userId:'+userId+';typeId:'+typeId+';meters:'+meters;
+        mainMap.addWMSFilteredLayer('brasil:bufferkm',vp);
+    },
+
+    addWMSFilteredLayer:(layerName, viewparams)=>{
+        // remove previous
+        if(mainMap.layerFilter) mainMap.layerFilter.removeFrom(mainMap.map);
+
         let ly=L.tileLayer.wms(conf.gs_url+"/wms", {
-            layers: 'brasil:bymun',
-            viewparams: 'userId:'+userId+';typeId1:2;typeId2:3',
+            layers: layerName,
+            viewparams: viewparams,
             format: 'image/png',
             transparent: true,
             tiled: true,

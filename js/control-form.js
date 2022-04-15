@@ -100,14 +100,17 @@
     displayUserTypeList:function(){
         let types=controlForm.userdata.usertypes;
         let dss=$('#usertypeitens');
+        dss.empty();
         types.forEach(
             ut => {
-                let a=$("<a></a>").text(ut.name);
-                a.addClass("dropdown-item");
-                a.on("click",controlForm.setUserTypeId);
-                a.attr("title",ut.description);
-                a.attr("id",ut.id);
-                dss.append(a);
+                if(ut.name!='associado'){
+                    let a=$("<a></a>").text(ut.name);
+                    a.addClass("dropdown-item");
+                    a.on("click",controlForm.setUserTypeId);
+                    a.attr("title",ut.description);
+                    a.attr("id",ut.id);
+                    dss.append(a);
+                }
             }
         );
     },
@@ -134,12 +137,18 @@
     },
 
     applySimple:function(){
-        console.log("filtro simples");
-        mainMap.applySimpleFilter()
+        mainMap.applySimpleFilter();
     },
 
     applyAdvanced:function(){
-        console.log("filtro avançado");
+        let proximity_km=$('#proximity_km').val();
+        proximity_km=+proximity_km;
+        let usertypename=$('.usertypename').val();
+        if(proximity_km>0 && usertypename!=''){
+            mainMap.applyAdvancedFilter(proximity_km);
+        }else{
+            controlForm.displayGeneralMessage("Filtros inválidos.");
+        }
     },
 
     openSimpleFilter:function(){
